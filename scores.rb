@@ -93,5 +93,5 @@ puts "lots of races: num odd numbers = 1"
 pp build_results(filter_for_odd_numbers(1,score_sets))
 
 puts
-puts "lots of races: num odd numbers = 0"
+puts "mountain dwarf: num odd numbers = 0"
 pp build_results(filter_for_odd_numbers(0,score_sets))
