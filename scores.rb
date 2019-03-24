@@ -61,12 +61,37 @@ end
 
 
 point_sets = gen_point_sets( [], TOTAL_POINTS, 0, 0 )
-pp point_sets
-
+# pp point_sets
 score_sets = point_sets.map {|a| a.map {|p| POINTS_TO_SCORE[p] } }
 
-modifier_sets = score_sets.map {|a| a.map {|s| SCORE_TO_MODIFIER.call(s) } }
 
-total_modifiers = modifier_sets.map {|a| a.reduce(:+)}
+def build_results score_sets
+  score_sets.map do |ss|
+    [
+      ss,
+      mods = ss.map {|s| SCORE_TO_MODIFIER.call(s) },
+      mods.reduce(:+)
+    ]
+  end
+end
 
-pp (1...point_sets.length).map{|i| [score_sets[i],modifier_sets[i],total_modifiers[i]]}
+# pp build_results(score_sets)
+
+def filter_for_odd_numbers num, score_sets
+  score_sets.select {|a| num == a.reduce(0){|n,s| n+=s%2 }}
+end
+
+puts "humans: max odd numbers = 5"
+pp build_results(filter_for_odd_numbers(5,score_sets))
+
+puts
+puts "half-elves: num odd numbers = 2"
+pp build_results(filter_for_odd_numbers(2,score_sets))
+
+puts
+puts "lots of races: num odd numbers = 1"
+pp build_results(filter_for_odd_numbers(1,score_sets))
+
+puts
+puts "lots of races: num odd numbers = 0"
+pp build_results(filter_for_odd_numbers(0,score_sets))
