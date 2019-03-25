@@ -25,7 +25,7 @@ def gen_point_sets partial_score_set, points_remaining, min_points_idx, level
     end
   end
 
-  score_sets = []
+  points_sets = []
 
   ( min_points_idx...POINTS.length ).each do |idx|
 
@@ -47,7 +47,7 @@ def gen_point_sets partial_score_set, points_remaining, min_points_idx, level
       # puts "all remaining points to allocate are too small"
       next
     else
-      score_sets += gen_point_sets(
+      points_sets += gen_point_sets(
         partial_score_set + [points_to_allocate],
         points_remaining - points_to_allocate,
         idx,
@@ -56,42 +56,71 @@ def gen_point_sets partial_score_set, points_remaining, min_points_idx, level
     end
   end
 
-  score_sets
+  points_sets
 end
 
 
-point_sets = gen_point_sets( [], TOTAL_POINTS, 0, 0 )
-# pp point_sets
-score_sets = point_sets.map {|a| a.map {|p| POINTS_TO_SCORE[p] } }
-
-
-def build_results score_sets
-  score_sets.map do |ss|
+def build_results point_sets
+  point_sets.map do |points|
     [
-      ss,
-      mods = ss.map {|s| SCORE_TO_MODIFIER.call(s) },
+      scores = points.map {|p| POINTS_TO_SCORE[p] },
+      mods = scores.map {|s| SCORE_TO_MODIFIER.call(s) },
       mods.reduce(:+)
     ]
   end
 end
 
-# pp build_results(score_sets)
-
-def filter_for_odd_numbers num, score_sets
-  score_sets.select {|a| num == a.reduce(0){|n,s| n+=s%2 }}
+def filter_for_odd_scores num, results
+  results.select {|r| num == r[0].reduce(0){|n,s| n+=s%2 }}
 end
 
-puts "humans: max odd numbers = 5"
-pp build_results(filter_for_odd_numbers(5,score_sets))
+def mark_ability_modifier to_mark, score, modifier
+  mod_str = ('%+2d' % modifier).sub('+0',' 0')
+  if ( to_mark == :Odd && (score%2 == 1) ) ||
+    ( to_mark == :Even && (score%2 == 0) )
+    return '(' + mod_str + ')'
+  else
+    return ' ' + mod_str + ' '
+  end
+end
+
+def display_results results, to_mark
+  col_widths = [28,35]
+  col_formats = col_widths.map{|w|"%-#{w}s"}
+
+  puts '-' * (col_widths.reduce(:+)+10)
+  puts (col_formats[0] % 'Ability scores')+(col_formats[1] % 'Ability modifiers with')
+  puts (col_formats[0] % 'before race bonuses')+(col_formats[1] % "(#{to_mark}) ability scores marked")+'Sum of base modifiers'
+  puts '-' * (col_widths.reduce(:+)+10)
+
+  results.each do |r|
+    line = col_formats[0] % r[0].map{|s| '%2s' % s.to_s}.join('  ')
+    line += col_formats[1] % r[1].each_with_index.map{|m,i| mark_ability_modifier(to_mark,r[0][i],m)}.join(' ')
+    puts line + r[2].to_s
+  end
+end
+
+
+results = build_results( gen_point_sets( [], TOTAL_POINTS, 0, 0 ) )
+# puts
+# pp results.sort { |x,y| y[2] <=> x[2] }
+# puts
 
 puts
-puts "half-elves: num odd numbers = 2"
-pp build_results(filter_for_odd_numbers(2,score_sets))
-
+puts "  Humans: max odd ability scores = 5"
+display_results(filter_for_odd_scores(5,results), :Even)
 puts
-puts "lots of races: num odd numbers = 1"
-pp build_results(filter_for_odd_numbers(1,score_sets))
-
 puts
-puts "mountain dwarf: num odd numbers = 0"
-pp build_results(filter_for_odd_numbers(0,score_sets))
+
+puts "  Half-elves: num odd ability scores = 2"
+display_results(filter_for_odd_scores(2,results), :Odd)
+puts
+puts
+
+puts "  Lots of races: num odd ability scores = 1"
+display_results(filter_for_odd_scores(1,results), :Odd)
+puts
+puts
+
+puts "  Mountain dwarfs: num odd ability scores = 0"
+display_results(filter_for_odd_scores(0,results), :Odd)
