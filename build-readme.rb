@@ -23,8 +23,28 @@
 # Print out a readme explaining what the programs does and showing its output.
 
 # Single string for introduction to information
+intro = "# dnd-stats-chooser
 
-# open README.md for write (delete contents)
-#     append introduction
-#     append output of ./scores.rb in a code block
-# close file
+In D&D 5e, one way of choosing the ability scores for a new character is to use the 27 point system. There are 65 valid combinations of stats that cost exactly 27 points. This program was written to help you choose the best combination for your character.
+
+
+    **********************************************************************************************
+    *                     This program was written by Justin Hellings.                           *
+    *            Justin is a life coach in Manchester in the UK. He is also a geek.              *
+    *  If you'd like to know more about his life coaching work, go to https://justinhellings.uk  *
+    **********************************************************************************************
+
+
+
+When you choose your ability scores this way, you want maximum bang for your buck. Ignoring race bonuses, you would only choose even values for ability scores because the next higher value (which is obviously an odd value) give you same modifier as the lower even value.
+
+*BUT* this does not take into account ability score bonus that you get because of your character's race. Some of these race bonuses are +1. Adding one to an even value of ability score will not increase the modifier it gives you, so in this case you *want* an odd number to add this +1 bonus to.
+
+Different character races have different numbers of +1 ability bonuses, so they require different base values in order to use their bonuses as efficiently as possible. The output of this program shows the efficient combinations for the character races listed in the D&D 5e player's handbook.
+
+"
+
+File.open( './README.md', 'w' ) do |file|
+  file.write intro
+  file.write `./scores.rb`.gsub(/^/,'    ')
+end

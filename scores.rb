@@ -133,7 +133,7 @@ end
 
 
 results = build_results( gen_point_sets( [], TOTAL_POINTS, 0, 0 ) )
-# puts
+# puts results.length
 # pp results.sort { |x,y| y[2] <=> x[2] }
 # puts
 
