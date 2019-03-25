@@ -76,8 +76,8 @@ end
 
 def mark_ability_modifier to_mark, score, modifier
   mod_str = ('%+2d' % modifier).sub('+0',' 0')
-  if ( to_mark == :Odd && (score%2 == 1) ) ||
-    ( to_mark == :Even && (score%2 == 0) )
+  if ( to_mark == :odd && (score%2 == 1) ) ||
+    ( to_mark == :even && (score%2 == 0) )
     return '(' + mod_str + ')'
   else
     return ' ' + mod_str + ' '
@@ -89,8 +89,14 @@ def display_results results, to_mark
   col_formats = col_widths.map{|w|"%-#{w}s"}
 
   puts '-' * (col_widths.reduce(:+)+10)
-  puts (col_formats[0] % 'Ability scores')+(col_formats[1] % 'Ability modifiers with')
-  puts (col_formats[0] % 'before race bonuses')+(col_formats[1] % "(#{to_mark}) ability scores marked")+'Sum of base modifiers'
+
+  puts ( col_formats[0] % 'Ability scores' ) +
+  ( col_formats[1] % ('Ability modifiers' + (to_mark.nil? ? '' : ' with')) ) +
+  'Sum of base modifiers'
+
+  puts ( col_formats[0] % 'before race bonuses' ) +
+  ( col_formats[1] % (to_mark.nil? ? '' : "(#{to_mark}) ability scores marked") )
+
   puts '-' * (col_widths.reduce(:+)+10)
 
   results.each do |r|
@@ -107,20 +113,29 @@ results = build_results( gen_point_sets( [], TOTAL_POINTS, 0, 0 ) )
 # puts
 
 puts
-puts "  Humans: max odd ability scores = 5"
-display_results(filter_for_odd_scores(5,results), :Even)
+puts "  Half-elves: number of odd ability score values before race bonuses = 2"
+display_results(filter_for_odd_scores(2,results), :odd)
 puts
 puts
 
-puts "  Half-elves: num odd ability scores = 2"
-display_results(filter_for_odd_scores(2,results), :Odd)
+puts "  Lots of races: number of odd ability score values before race bonuses = 1"
+display_results(filter_for_odd_scores(1,results), :odd)
+puts
+
+puts "
+ **********************************************************************************************
+ *                     This program was written by Justin Hellings.                           *
+ *            Justin is a life coach in Manchester in the UK. He is also a geek.              *
+ *  If you'd like to know more about his life coaching work, go to https://justinhellings.uk  *
+ **********************************************************************************************
+
+
+"
+
+puts "  Humans: number of odd ability score values before race bonuses = 5 (i.e. the maximum)"
+display_results(filter_for_odd_scores(5,results), :even)
 puts
 puts
 
-puts "  Lots of races: num odd ability scores = 1"
-display_results(filter_for_odd_scores(1,results), :Odd)
-puts
-puts
-
-puts "  Mountain dwarfs: num odd ability scores = 0"
-display_results(filter_for_odd_scores(0,results), :Odd)
+puts "  Mountain dwarfs: number of odd ability score values before race bonuses = 0"
+display_results(filter_for_odd_scores(0,results), nil)
