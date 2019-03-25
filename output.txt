@@ -61,7 +61,7 @@ before race bonuses         (even) ability scores marked
   Mountain dwarfs: number of odd ability score values before race bonuses = 0
 -------------------------------------------------------------------------
 Ability scores              Ability modifiers                  Sum of base modifiers
-before race bonuses                                            
+before race bonuses         
 -------------------------------------------------------------------------
 14  14  14  12  10   8       +2   +2   +2   +1    0   -1       6
 14  14  14  10  10  10       +2   +2   +2    0    0    0       6

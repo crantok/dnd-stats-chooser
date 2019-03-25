@@ -120,7 +120,7 @@ def display_results results, to_mark
   'Sum of base modifiers'
 
   puts ( col_formats[0] % 'before race bonuses' ) +
-  ( col_formats[1] % (to_mark.nil? ? '' : "(#{to_mark}) ability scores marked") )
+  ( to_mark.nil? ? '' : (col_formats[1] % "(#{to_mark}) ability scores marked") )
 
   puts '-' * (col_widths.reduce(:+)+10)
 
