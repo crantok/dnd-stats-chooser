@@ -138,12 +138,12 @@ results = build_results( gen_point_sets( [], TOTAL_POINTS, 0, 0 ) )
 # puts
 
 puts
-puts "  Half-elves: number of odd ability score values before race bonuses = 2"
+puts "  Half-elves get two +1 bonuses"
 display_results(filter_for_odd_scores(2,results), :odd)
 puts
 puts
 
-puts "  Lots of races: number of odd ability score values before race bonuses = 1"
+puts "  Most races get a single +1 bonus"
 display_results(filter_for_odd_scores(1,results), :odd)
 puts
 
@@ -157,10 +157,11 @@ puts "
 
 "
 
-puts "  Humans: number of odd ability score values before race bonuses = 5 (i.e. the maximum)"
+puts "  Humans get six +1 bonuses.","  You can choose combinations with a maximum of five odd scores."
 display_results(filter_for_odd_scores(5,results), :even)
 puts
 puts
 
-puts "  Mountain dwarfs: number of odd ability score values before race bonuses = 0"
+puts "  Mountain dwarfs have no +1 bonuses. If you want more variety of modifier"
+puts "  combinations (like +2 +2 +1 +1 0 0) look at results for a single +1 race bonus.)"
 display_results(filter_for_odd_scores(0,results), nil)
